@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Routing", "..\src\Elastic.Routing\Elastic.Routing.csproj", "{7EDFC7A9-FB32-4432-9669-C8C24366AD5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Routing.Sample", "Elastic.Routing.Sample\Elastic.Routing.Sample.csproj", "{7640AB68-7DF1-442A-A0C4-77C21DFC421B}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Elastic.Routing.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7EDFC7A9-FB32-4432-9669-C8C24366AD5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EDFC7A9-FB32-4432-9669-C8C24366AD5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EDFC7A9-FB32-4432-9669-C8C24366AD5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EDFC7A9-FB32-4432-9669-C8C24366AD5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7640AB68-7DF1-442A-A0C4-77C21DFC421B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7640AB68-7DF1-442A-A0C4-77C21DFC421B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7640AB68-7DF1-442A-A0C4-77C21DFC421B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7640AB68-7DF1-442A-A0C4-77C21DFC421B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

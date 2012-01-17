@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rows>
+  <Row>
+    <Pattern>({folder}/){file}.{extension}</Pattern>
+    <Url>file.txt</Url>
+    <Result>true</Result>
+    <file>file</file>
+    <extension>txt</extension>
+  </Row>
+  <Row>
+    <Pattern>({folder}/){file}.{extension}</Pattern>
+    <Url>root/file.txt</Url>
+    <Result>true</Result>
+    <default__folder>root</default__folder>
+    <file>file</file>
+    <extension>txt</extension>
+  </Row>
+</Rows>

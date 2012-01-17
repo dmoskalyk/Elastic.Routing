@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Elastic.Routing.Sample</id>
+    <version>1.0</version>
+    <title>Elastic.Routing.Sample</title>
+    <authors>Dmitry Moskalyk</authors>
+    <owners>Dmitry Moskalyk</owners>
+    <licenseUrl>https://github.com/lokiworld/Elastic.Routing/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/lokiworld/Elastic.Routing</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A sample MVC 3 application which demonstrates the features and usage of the 'Elastic.Routing' library.</description>
+    <releaseNotes>Initial package.</releaseNotes>
+    <copyright>Copyright 2012</copyright>
+    <tags>ASP.NET MVC Routing</tags>
+    <dependencies>
+      <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+      <dependency id="WebActivator" version="1.5" />
+      <dependency id="Elastic.Routing" version="1.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Controllers\*" target="content\Controllers\" />
+    <file src="Views\Elastic\*" target="content\Views\Elastic\" />
+    <file src="App_Start\*" target="content\App_Start\" />
+    <file src="NavigationRouteDecorator.cs" target="content\" />
+  </files>
+</package>

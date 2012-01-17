@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+    <div>
+        <h1>Elastic.Routing.Sample</h1>
+        <div>Try out the following links:</div>
+        <ol>
+            <li>@Html.RouteLink("Homepage (url by route name)", "Homepage")</li>
+            <li>@Html.RouteLink("French Homepage", "Homepage", new { lang = "fr-fr" })</li>
+            <li>@Html.RouteLink("Elastic/Index with current language", new { controller = "Elastic", action = "index" })</li>
+            <li>@Html.RouteLink("Elastic/Index with 'ru-RU' language", new { lang = "ru-RU", controller = "Elastic", action = "index" })</li>
+            <li>@Html.RouteLink("Elastic/Index with current language and no controller (controller is determined from the incoming defaults)", new { action = "index" })</li>
+            <li>@Html.RouteLink("Navigation node #1 (no title, no format)", new { path = "folder1/folder2", id = 1 })</li>
+            <li>@Html.RouteLink("Navigation node #2 (not found)", new { path = "folder1/folder2", id = 2 })</li>
+            <li>@Html.RouteLink("Navigation node with title", new { path = "folder1/folder2", id = 1, title = "my-node" })</li>
+            <li>@Html.RouteLink("Navigation node with title and format", new { path = "folder1/folder2", id = 1, title = "my-node", format = "json" })</li>
+            <li>@Html.RouteLink("Navigation node (no title, format is ignored)", new { path = "folder1/folder2", id = 1, format = "json" })</li>
+        </ol>
+    </div>
+    <hr />
+    @RenderBody()
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Elastic/_Layout.cshtml";
+    ViewBag.Title = "Elastic.Routing.Sample";
+    var route = (Elastic.Routing.ElasticRoute)ViewContext.RouteData.Route;
+}
+
+<h2>@ViewContext.RouteData.GetRequiredString("controller") / @ViewContext.RouteData.GetRequiredString("action")</h2>
+
+<div>Route URL: @route.Url</div>
+<div>Route values:</div>
+<ul>
+    @foreach (var item in ViewContext.RouteData.Values)
+    {
+        <li>@item.Key: @item.Value</li>
+    }
+</ul>
+@if (route.IncomingDefaults.Count > 0)
+{
+<div>Incoming defaults:</div>
+<ul>
+    @foreach (var item in route.IncomingDefaults)
+    {
+        <li>@item.Key: @item.Value</li>
+    }
+</ul>
+}
