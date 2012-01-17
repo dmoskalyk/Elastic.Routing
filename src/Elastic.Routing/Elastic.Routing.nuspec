@@ -6,7 +6,7 @@
     <title>Elastic.Routing</title>
     <authors>Dmitry Moskalyk</authors>
     <owners>Dmitry Moskalyk</owners>
-    <licenseUrl>https://github.com/lokiworld/Elastic.Routing/master/LICENSE.txt</licenseUrl>
+    <licenseUrl>https://github.com/lokiworld/Elastic.Routing/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/lokiworld/Elastic.Routing</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A package with powerful routing features.</description>

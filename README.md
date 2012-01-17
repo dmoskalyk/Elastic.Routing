@@ -10,7 +10,7 @@ Use NuGet to install Elastic.Routing package into an existing web application:
 
     PM> Install-Package Elastic.Routing
 
-or download a standalone package.
+or [download](https://github.com/lokiworld/Elastic.Routing/zipball/master) a zip package.
 
 ### Elastic.Routing.Sample application
 This is a sample web application which demonstrates the possibilities of the library.
@@ -85,4 +85,4 @@ The route uses two separate collections of default values:
 
 A default value can be a simple object whose `ToString()` method is evaluated or an instance which implements the `IRouteValueProvider` interface.
 
-Elastic.Routing is copyrighted under [the following license](https://github.com/lokiworld/Elastic.Routing/master/LICENSE.txt).
+Elastic.Routing is copyrighted under [the following license](https://github.com/lokiworld/Elastic.Routing/blob/master/LICENSE.txt).
