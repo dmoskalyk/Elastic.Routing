@@ -110,11 +110,7 @@ namespace Elastic.Routing.Internals
         /// <returns>Returns the default route value by the key.</returns>
         protected virtual object GetDefaultValue(string key)
         {
-            var value = defaults[key];
-            var valueProvider = value as IRouteValueProvider;
-            if (valueProvider != null)
-                value = valueProvider.GetValue(key, request, values);
-            return value;
+            return Utils.EvaluateDefaultValue(request, defaults, key);
         }
 
         /// <summary>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Routing;
 
-namespace Elastic.Routing.RouteValueProviders
+namespace Elastic.Routing.RouteValues
 {
     /// <summary>
     /// The route value provider which gets the value from the current request's route data.
@@ -16,11 +16,10 @@ namespace Elastic.Routing.RouteValueProviders
         /// </summary>
         /// <param name="key">The value key.</param>
         /// <param name="request">The request.</param>
-        /// <param name="values">The current route values.</param>
         /// <returns>
         /// Returns the value for the specified key.
         /// </returns>
-        public object GetValue(string key, RequestContext request, RouteValueDictionary values)
+        public object GetValue(string key, RequestContext request)
         {
             return request.RouteData.Values[key];
         }

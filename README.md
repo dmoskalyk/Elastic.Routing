@@ -23,7 +23,7 @@ Use NuGet to install Elastic.Routing.Sample package into an existing web applica
 ## Features
 **1. Wildcard route parameters**
 
-Wildcard parameter names starts with `*`.
+Wildcard parameter names start with `*`.
 
 Example:
 
@@ -40,11 +40,13 @@ This pattern will match the following URLs:
   * _path_: details
   * _id_: user1
 
+<hr/>
+
 **2. Optional segments**
 
-Optional URL are surrounded by braces.
+Optional URL segments are surrounded with braces.
 
-**Be very careful with optional parameters because in some cases the URL can be parsed in several different ways.**
+**Be very careful with optional parameters because in some cases one URL can be parsed in several different ways.**
 
 Example:
 
@@ -56,7 +58,7 @@ This pattern will match the following urls:
   * _lang_: en
   * _controller_: records
   * _action_: list
-  * _id_: <empty>
+  * _id_: &lt;empty&gt;
 * en/records/details/1
   * _lang_: en
   * _controller_: records
@@ -68,13 +70,17 @@ This pattern will match the following urls:
   * _action_: details
   * _id_: 1
 
+<hr/>
+
 **3. Constraints**
 
-Constraints work in the same way as in the standard ASP.NET Routing except that they are not evaluated for optional parameters which have not been matched in the incoming URL.
+Constraints work in the same way as in the standard ASP.NET Routing.
 
 Constraints can be strings of regular expression format or objects of type `IRouteConstraint` which comes from the standard `System.Web.Routing` library.
 
-**Constraints are not evaluated on default values (both incoming and outgoing).**
+**Be aware that constraints are not evaluated on default values (both incoming and outgoing) and optional parameters which have not been matched in the incoming URL.**
+
+<hr/>
 
 **4. Default values**
 
@@ -85,4 +91,14 @@ The route uses two separate collections of default values:
 
 A default value can be a simple object whose `ToString()` method is evaluated or an instance which implements the `IRouteValueProvider` interface.
 
-Elastic.Routing is copyrighted under [the following license](https://github.com/lokiworld/Elastic.Routing/blob/master/LICENSE.txt).
+<hr/>
+
+**5. Projections**
+
+Projections transform the route values before the URL is generated of after the route has been parsed. They can be used, for example, to escape the route value, translate it to a different language etc.
+
+Projections are the classes which implement an interface `IRouteValueProjection`.
+
+<hr/>
+
+Elastic.Routing is copyrighted under the [MIT license](https://github.com/lokiworld/Elastic.Routing/blob/master/LICENSE.txt).

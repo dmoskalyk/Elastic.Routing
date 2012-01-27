@@ -2,12 +2,13 @@
 <package >
   <metadata>
     <id>Elastic.Routing</id>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <title>Elastic.Routing</title>
     <authors>Dmitry Moskalyk</authors>
     <owners>Dmitry Moskalyk</owners>
     <licenseUrl>https://github.com/lokiworld/Elastic.Routing/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/lokiworld/Elastic.Routing</projectUrl>
+	<iconUrl>https://github.com/lokiworld/Elastic.Routing/raw/master/assets/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A package with powerful routing features.</description>
     <releaseNotes>Initial package.</releaseNotes>

@@ -57,6 +57,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\src\Elastic.Routing\Properties\GeneralAssemblyInfo.cs">
+      <Link>Properties\GeneralAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="App_Start\Elastic.cs" />
     <Compile Include="Controllers\ElasticController.cs" />
     <Compile Include="Global.asax.cs">

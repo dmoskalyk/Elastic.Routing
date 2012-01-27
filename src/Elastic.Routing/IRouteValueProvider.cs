@@ -16,8 +16,7 @@ namespace Elastic.Routing
         /// </summary>
         /// <param name="key">The value key.</param>
         /// <param name="request">The request.</param>
-        /// <param name="values">The current route values.</param>
         /// <returns>Returns the value for the specified key.</returns>
-        object GetValue(string key, RequestContext request, RouteValueDictionary values);
+        object GetValue(string key, RequestContext request);
     }
 }

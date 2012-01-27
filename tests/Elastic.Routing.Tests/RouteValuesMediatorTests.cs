@@ -58,7 +58,7 @@ namespace Elastic.Routing.Tests
         {
             var key1 = "provided value";
             var valueProvider = new Mock<IRouteValueProvider>();
-            valueProvider.Setup(p => p.GetValue("key1", It.IsAny<RequestContext>(), It.IsAny<RouteValueDictionary>())).Returns(key1);
+            valueProvider.Setup(p => p.GetValue("key1", It.IsAny<RequestContext>())).Returns(key1);
             var mediator = Create(RouteDirection.IncomingRequest, defaults: new { key1 = valueProvider.Object });
             var actual = mediator.ResolveValue("key1");
             Assert.AreEqual(key1, actual);
@@ -137,7 +137,7 @@ namespace Elastic.Routing.Tests
             var value = "default value";
             var values = new RouteValueDictionary();
             var valueProvider = new Mock<IRouteValueProvider>();
-            valueProvider.Setup(p => p.GetValue(key, It.IsAny<RequestContext>(), It.IsAny<RouteValueDictionary>())).Returns(value);
+            valueProvider.Setup(p => p.GetValue(key, It.IsAny<RequestContext>())).Returns(value);
             var mediator = Create(RouteDirection.UrlGeneration, values: values, defaults: new { key1 = valueProvider.Object });
             mediator.SetValue(key, null);
             Assert.AreEqual(1, values.Count);

@@ -51,6 +51,11 @@ namespace Elastic.Routing
         public RouteValueDictionary Constraints { get; private set; }
 
         /// <summary>
+        /// Gets the route values projections.
+        /// </summary>
+        public IDictionary<string, IRouteValueProjection> Projections { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ElasticRoute"/> class.
         /// </summary>
         /// <param name="url">The URL pattern.</param>
@@ -58,17 +63,42 @@ namespace Elastic.Routing
         /// <param name="constraints">The route constraints.</param>
         /// <param name="incomingDefaults">The incoming request default route values.</param>
         /// <param name="outgoingDefaults">The URL generation default route values.</param>
+        /// <param name="projections">The route values projections.</param>
+        public ElasticRoute(string url, IRouteHandler routeHandler,
+            object constraints = null,
+            object incomingDefaults = null,
+            object outgoingDefaults = null,
+            object projections = null)
+            : this(url, routeHandler,
+                constraints: constraints != null ? new RouteValueDictionary(constraints) : null,
+                incomingDefaults: incomingDefaults != null ? new RouteValueDictionary(incomingDefaults) : null,
+                outgoingDefaults: outgoingDefaults != null ? new RouteValueDictionary(outgoingDefaults) : null,
+                projections: (projections != null ? new RouteValueDictionary(projections) : null).Cast<IRouteValueProjection>())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElasticRoute"/> class.
+        /// </summary>
+        /// <param name="url">The URL pattern.</param>
+        /// <param name="routeHandler">The route handler.</param>
+        /// <param name="constraints">The route constraints.</param>
+        /// <param name="incomingDefaults">The incoming request default route values.</param>
+        /// <param name="outgoingDefaults">The URL generation default route values.</param>
+        /// <param name="projections">The route values projections.</param>
         public ElasticRoute(string url, IRouteHandler routeHandler,
             RouteValueDictionary constraints = null,
             RouteValueDictionary incomingDefaults = null, 
-            RouteValueDictionary outgoingDefaults = null)
+            RouteValueDictionary outgoingDefaults = null,
+            IDictionary<string, IRouteValueProjection> projections = null)
         {
             this.Url = url;
             this.RouteHandler = routeHandler;
             this.IncomingDefaults = incomingDefaults ?? EmptyValues;
             this.OutgoingDefaults = outgoingDefaults ?? EmptyValues;
             this.Constraints = constraints ?? EmptyValues;
-            
+            this.Projections = projections ?? new Dictionary<string, IRouteValueProjection>();
+
             this.fullPathSegment = ParseSegments(url);
             this.urlMatch = BuildRegex(fullPathSegment);
 
@@ -116,6 +146,13 @@ namespace Elastic.Routing
 
                 data.Values[defaultValue.Key] = valuesMediator.ResolveValue(defaultValue.Key);
             }
+            
+            foreach (var projection in Projections)
+            {
+                if (projection.Value == null)
+                    continue;
+                projection.Value.Incoming(projection.Key, data.Values);
+            }
 
             return data;
         }
@@ -130,12 +167,20 @@ namespace Elastic.Routing
         /// </returns>
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            var valuesMediator = CreateMediator(requestContext, values, RouteDirection.UrlGeneration);
+            var routeValues = new RouteValueDictionary(values);
+            foreach (var projection in Projections)
+            {
+                if (projection.Value == null)
+                    continue;
+                projection.Value.Outgoing(projection.Key, routeValues);
+            }
+
+            var valuesMediator = CreateMediator(requestContext, routeValues, RouteDirection.UrlGeneration);
             var url = ConstructUrl(fullPathSegment, valuesMediator);
             if (url == null || !urlMatch.IsMatch(url))
                 return null;
 
-            var queryString = BuildQueryString(valuesMediator, values);
+            var queryString = BuildQueryString(valuesMediator, routeValues);
             if (queryString != null)
                 url += '?' + queryString;
 
