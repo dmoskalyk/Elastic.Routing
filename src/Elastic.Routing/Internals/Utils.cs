@@ -53,8 +53,15 @@ namespace Elastic.Routing.Internals
             bool isPrevDash = true;
             foreach (var ch in value)
             {
-                if (wordCharCategories.Contains(Char.GetUnicodeCategory(ch)) || extraValidChars.Contains(ch))
+                if (wordCharCategories.Contains(Char.GetUnicodeCategory(ch)))
                 {
+                    sb.Append(ch);
+                    isPrevDash = false;
+                }
+                else if (extraValidChars.Contains(ch))
+                {
+                    if (isPrevDash)
+                        sb.Length--;
                     sb.Append(ch);
                     isPrevDash = false;
                 }
@@ -64,7 +71,7 @@ namespace Elastic.Routing.Internals
                     isPrevDash = true;
                 }
             }
-            if (isPrevDash)
+            if (sb.Length > 0 && isPrevDash)
                 sb.Length--;
             return sb.ToString();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
+using System.Text.RegularExpressions;
 
 namespace Elastic.Routing.Internals
 {
@@ -101,6 +102,32 @@ namespace Elastic.Routing.Internals
             VisitedKeys.Add(key);
             values[key] = value ?? GetDefaultValue(key);
             CheckCustomConstraint(key);
+        }
+
+        /// <summary>
+        /// Matches all constraints against the current route values.
+        /// </summary>
+        /// <returns>The value indicating whether all constraints match or not.</returns>
+        public virtual bool MatchConstraints(HashSet<string> requiredParameters)
+        {
+            foreach (var constraint in constraints)
+            {
+                var objValue = values[constraint.Key];
+                if (objValue == null && !requiredParameters.Contains(constraint.Key))
+                    continue;
+                var value = (objValue ?? string.Empty).ToString();
+                if (constraint.Value is string)
+                {
+                    if (!Regex.IsMatch(value, (string)constraint.Value, RegexOptions.IgnoreCase))
+                        return false;
+                }
+                else
+                {
+                    if (!CheckCustomConstraint(constraint.Key))
+                        return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>

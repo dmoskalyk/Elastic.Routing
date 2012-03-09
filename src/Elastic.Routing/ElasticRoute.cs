@@ -177,7 +177,8 @@ namespace Elastic.Routing
 
             var valuesMediator = CreateMediator(requestContext, routeValues, RouteDirection.UrlGeneration);
             var url = ConstructUrl(fullPathSegment, valuesMediator);
-            if (url == null || !urlMatch.IsMatch(url))
+            if (url == null || !urlMatch.IsMatch(url) ||
+                !valuesMediator.MatchConstraints(new HashSet<string>(fullPathSegment.RequiredParameters.Select(p => p.Name))))
                 return null;
 
             var queryString = BuildQueryString(valuesMediator, routeValues);
@@ -257,6 +258,7 @@ namespace Elastic.Routing
             {
                 if (!valuesMediator.VisitedKeys.Contains(entry.Key) &&
                     !valuesMediator.InvalidatedKeys.Contains(entry.Key) &&
+                    !OutgoingDefaults.ContainsKey(entry.Key) &&
                     entry.Value != null)
                 {
                     queryString[entry.Key] = entry.Value.ToString();

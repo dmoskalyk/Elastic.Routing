@@ -15,6 +15,7 @@ namespace Elastic.Routing.Tests
         protected IRouteHandler routeHandler;
         protected Mock<HttpContextBase> context;
         protected Mock<HttpRequestBase> request;
+        protected Mock<HttpResponseBase> response;
 
         public TestContext TestContext { get; set; }
 
@@ -23,7 +24,10 @@ namespace Elastic.Routing.Tests
             routeHandler = new PageRouteHandler("~/");
             context = new Mock<HttpContextBase>();
             request = new Mock<HttpRequestBase>();
+            response = new Mock<HttpResponseBase>();
             context.SetupGet(c => c.Request).Returns(() => request.Object);
+            context.SetupGet(c => c.Response).Returns(() => response.Object);
+            response.Setup(r => r.ApplyAppPathModifier(It.IsAny<string>())).Returns(new Func<string, string>(s => s));
         }
 
         protected TestParams GetParams()

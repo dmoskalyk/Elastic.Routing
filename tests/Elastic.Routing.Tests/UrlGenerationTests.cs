@@ -18,8 +18,29 @@ namespace Elastic.Routing.Tests
         public void Initialize()
         {
             InitializeBase();
-            requestContext = new RequestContext();
+            requestContext = new RequestContext() { HttpContext = context.Object };
             request.SetupGet(r => r.RequestContext).Returns(requestContext);
+        }
+
+        [TestMethod]
+        public void ElasticRoute_GetVirtualPath_MatchConstraints()
+        {
+            var routeCollection = new RouteCollection()
+            {
+                new ElasticRoute("url1", routeHandler: routeHandler,
+                    constraints: new { controller = "Controller1", action = "Action1" },
+                    outgoingDefaults: new { controller = "Controller1", action = "Action1" }),
+                new ElasticRoute("url2", routeHandler: routeHandler,
+                    constraints: new { controller = "Controller2", action = "Action1" },
+                    outgoingDefaults: new { controller = "Controller2", action = "Action1" }),
+                new ElasticRoute("url3", routeHandler: routeHandler,
+                    constraints: new { controller = "Controller2", action = "Action2" },
+                    outgoingDefaults: new { controller = "Controller2", action = "Action2" })
+            };
+
+            var routeValues = new RouteValueDictionary(new { controller = "Controller2", action = "Action2" });
+            var virtualPath = routeCollection.GetVirtualPath(requestContext, routeValues);
+            Assert.AreEqual("/url3", virtualPath.VirtualPath);
         }
 
         [TestMethod]
