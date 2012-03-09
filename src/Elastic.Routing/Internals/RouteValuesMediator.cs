@@ -113,7 +113,7 @@ namespace Elastic.Routing.Internals
             foreach (var constraint in constraints)
             {
                 var objValue = values[constraint.Key];
-                if (objValue == null && !requiredParameters.Contains(constraint.Key))
+                if (objValue == null && (!requiredParameters.Contains(constraint.Key) || defaults.ContainsKey(constraint.Key)))
                     continue;
                 var value = (objValue ?? string.Empty).ToString();
                 if (constraint.Value is string)

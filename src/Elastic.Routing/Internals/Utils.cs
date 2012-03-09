@@ -94,5 +94,26 @@ namespace Elastic.Routing.Internals
             }
             return result;
         }
+
+        /// <summary>
+        /// Determines whether the specified dictionary has value.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified dictionary has value; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasValue(this RouteValueDictionary dictionary, string key, object value)
+        {
+            if (dictionary == null || value == null)
+                return false;
+
+            object v;
+            if (!dictionary.TryGetValue(key, out v) || v == null)
+                return false;
+
+            return String.Equals(v.ToString(), value.ToString(), StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

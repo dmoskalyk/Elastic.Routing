@@ -256,13 +256,14 @@ namespace Elastic.Routing
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             foreach (var entry in values)
             {
-                if (!valuesMediator.VisitedKeys.Contains(entry.Key) &&
-                    !valuesMediator.InvalidatedKeys.Contains(entry.Key) &&
-                    !OutgoingDefaults.ContainsKey(entry.Key) &&
-                    entry.Value != null)
-                {
-                    queryString[entry.Key] = entry.Value.ToString();
-                }
+                if (valuesMediator.VisitedKeys.Contains(entry.Key) ||
+                    valuesMediator.InvalidatedKeys.Contains(entry.Key) ||
+                    entry.Value == null ||
+                    OutgoingDefaults.HasValue(entry.Key, entry.Value) ||
+                    IncomingDefaults.HasValue(entry.Key, entry.Value))
+                    continue;
+
+                queryString[entry.Key] = entry.Value.ToString();
             }
 
             if (queryString.Count > 0)
