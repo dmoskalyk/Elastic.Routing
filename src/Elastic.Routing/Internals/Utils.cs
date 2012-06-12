@@ -41,10 +41,11 @@ namespace Elastic.Routing.Internals
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="extraValidChars">The extra valid chars which are not replaced with dashes.</param>
+        /// <param name="maxLength">The maximum length of the result.</param>
         /// <returns>
         /// Returns the dashed value.
         /// </returns>
-        public static string DashedValue(string value, HashSet<char> extraValidChars)
+        public static string DashedValue(string value, HashSet<char> extraValidChars, int maxLength = 0)
         {
             if (String.IsNullOrEmpty(value))
                 return value;
@@ -73,7 +74,19 @@ namespace Elastic.Routing.Internals
             }
             if (sb.Length > 0 && isPrevDash)
                 sb.Length--;
-            return sb.ToString();
+
+            var s = sb.ToString();
+            if (maxLength > 0 && sb.Length > maxLength)
+            {
+                s = sb.ToString().Substring(0, maxLength);
+                if (sb[maxLength] != '-')
+                {
+                    var prevDashIndex = s.LastIndexOf('-');
+                    if (prevDashIndex > 0)
+                        s = s.Remove(prevDashIndex);
+                }
+            }
+            return s;
         }
 
         /// <summary>
@@ -114,6 +127,41 @@ namespace Elastic.Routing.Internals
                 return false;
 
             return String.Equals(v.ToString(), value.ToString(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Copies the entries from the source dictionary to the target.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="source">The source collection.</param>
+        /// <param name="target">The target.</param>
+        public static void CopyTo<TKey, TValue>(this IDictionary<TKey, TValue> source, IDictionary<TKey, TValue> target)
+        {
+            if (source != null)
+            {
+                foreach (var entry in source)
+                {
+                    target[entry.Key] = entry.Value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts the object to the route values dictionary.
+        /// </summary>
+        /// <param name="data">The data to convert.</param>
+        /// <returns>Returns the route values dictionary or <c>null</c> if the <paramref name="data"/> is <c>null</c>.</returns>
+        public static RouteValueDictionary ToRouteValues(this object data)
+        {
+            if (data == null)
+                return null;
+            else if (data is RouteValueDictionary)
+                return (RouteValueDictionary)data;
+            else if (data is IDictionary<string, object>)
+                return new RouteValueDictionary((IDictionary<string, object>)data);
+            else
+                return new RouteValueDictionary(data);
         }
     }
 }

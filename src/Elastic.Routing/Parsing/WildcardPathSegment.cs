@@ -30,5 +30,18 @@ namespace Elastic.Routing.Parsing
         {
             return ".+";
         }
+
+        /// <summary>
+        /// Gets the URL part for this segment. Used in URLs construction.
+        /// </summary>
+        /// <param name="valueGetter">The route value getter delegate.</param>
+        /// <returns>
+        /// Returns the corresponding part of the URL or <c>null</c> when the value is missing.
+        /// </returns>
+        public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
+        {
+            var value = valueGetter(Name);
+            return MatchesPattern((string)value) ? value : null;
+        }
     }
 }

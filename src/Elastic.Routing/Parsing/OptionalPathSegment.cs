@@ -62,12 +62,17 @@ namespace Elastic.Routing.Parsing
         /// <returns>
         /// Returns the corresponding part of the URL or <c>null</c> when the value is missing.
         /// </returns>
-        public override string GetUrlPart(Func<string, string> valueGetter)
+        public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
         {
             var parts = Segments.Select(s => s.GetUrlPart(valueGetter)).ToList();
             if (parts.Any(p => p == null))
-                return string.Empty;
-            return string.Concat(parts);
+                return (SegmentValue)string.Empty;
+
+            var zip = Segments.Zip(parts, (s, p) => new { Segment = s, Part = p }).Where(i => i.Segment is ParameterPathSegment).ToList();
+            if (zip.Count > 0 && zip.All(i => i.Part.IsDefault))
+                return (SegmentValue)string.Empty;
+
+            return (SegmentValue)string.Concat(parts.Select(s => s.ToString()));
         }
     }
 }

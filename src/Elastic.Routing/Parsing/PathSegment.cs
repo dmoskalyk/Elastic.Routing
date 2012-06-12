@@ -45,7 +45,7 @@ namespace Elastic.Routing.Parsing
         /// </summary>
         /// <param name="valueGetter">The route value getter delegate.</param>
         /// <returns>Returns the corresponding part of the URL or <c>null</c> when the value is missing.</returns>
-        public abstract string GetUrlPart(Func<string, string> valueGetter);
+        public abstract SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter);
     }
 
     /// <summary>

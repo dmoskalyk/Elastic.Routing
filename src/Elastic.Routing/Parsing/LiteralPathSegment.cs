@@ -51,9 +51,9 @@ namespace Elastic.Routing.Parsing
         /// <returns>
         /// Returns the corresponding part of the URL or <c>null</c> when the value is missing.
         /// </returns>
-        public override string GetUrlPart(Func<string, string> valueGetter)
+        public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
         {
-            return this.Text;
+            return (SegmentValue)this.Text;
         }
     }
 }

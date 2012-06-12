@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DecoratedRouteHandler.cs" />
+    <Compile Include="Parsing\SegmentValue.cs" />
     <Compile Include="Internals\Utils.cs" />
     <Compile Include="IRouteValueProjection.cs" />
     <Compile Include="Properties\GeneralAssemblyInfo.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="Internals\RouteValuesMediator.cs" />
     <Compile Include="Internals\RouteWrapper.cs" />
     <Compile Include="RouteValues\CallbackRouteValueProvider.cs" />
+    <Compile Include="RouteValues\ChainedRouteValueProjection.cs" />
     <Compile Include="RouteValues\DashedRouteValueProjection.cs" />
+    <Compile Include="RouteValues\ReplaceRouteValueProjection.cs" />
     <Compile Include="RouteValues\OriginalRouteValueProvider.cs" />
     <Compile Include="RoutingExtensions.cs" />
   </ItemGroup>

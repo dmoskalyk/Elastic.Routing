@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Elastic.Routing</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>Elastic.Routing</title>
     <authors>Dmitry Moskalyk</authors>
     <owners>Dmitry Moskalyk</owners>
@@ -11,7 +11,7 @@
 	<iconUrl>https://github.com/lokiworld/Elastic.Routing/raw/master/assets/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A package with powerful routing features.</description>
-    <releaseNotes>Initial package.</releaseNotes>
+    <releaseNotes>Stable version.</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>ASP.NET MVC Routing</tags>
   </metadata>

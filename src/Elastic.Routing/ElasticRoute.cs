@@ -56,6 +56,14 @@ namespace Elastic.Routing
         public IDictionary<string, IRouteValueProjection> Projections { get; private set; }
 
         /// <summary>
+        /// Gets or sets the data tokens.
+        /// </summary>
+        /// <value>
+        /// The data tokens.
+        /// </value>
+        public RouteValueDictionary DataTokens { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ElasticRoute"/> class.
         /// </summary>
         /// <param name="url">The URL pattern.</param>
@@ -64,16 +72,19 @@ namespace Elastic.Routing
         /// <param name="incomingDefaults">The incoming request default route values.</param>
         /// <param name="outgoingDefaults">The URL generation default route values.</param>
         /// <param name="projections">The route values projections.</param>
+        /// <param name="dataTokens">The data tokens.</param>
         public ElasticRoute(string url, IRouteHandler routeHandler,
             object constraints = null,
             object incomingDefaults = null,
             object outgoingDefaults = null,
-            object projections = null)
+            object projections = null,
+            object dataTokens = null)
             : this(url, routeHandler,
-                constraints: constraints != null ? new RouteValueDictionary(constraints) : null,
-                incomingDefaults: incomingDefaults != null ? new RouteValueDictionary(incomingDefaults) : null,
-                outgoingDefaults: outgoingDefaults != null ? new RouteValueDictionary(outgoingDefaults) : null,
-                projections: (projections != null ? new RouteValueDictionary(projections) : null).Cast<IRouteValueProjection>())
+                constraints: constraints.ToRouteValues(),
+                incomingDefaults: incomingDefaults.ToRouteValues(),
+                outgoingDefaults: outgoingDefaults.ToRouteValues(),
+                projections: projections.ToRouteValues().Cast<IRouteValueProjection>(),
+                dataTokens: dataTokens.ToRouteValues())
         {
         }
 
@@ -86,11 +97,13 @@ namespace Elastic.Routing
         /// <param name="incomingDefaults">The incoming request default route values.</param>
         /// <param name="outgoingDefaults">The URL generation default route values.</param>
         /// <param name="projections">The route values projections.</param>
+        /// <param name="dataTokens">The data tokens.</param>
         public ElasticRoute(string url, IRouteHandler routeHandler,
             RouteValueDictionary constraints = null,
             RouteValueDictionary incomingDefaults = null, 
             RouteValueDictionary outgoingDefaults = null,
-            IDictionary<string, IRouteValueProjection> projections = null)
+            IDictionary<string, IRouteValueProjection> projections = null,
+            RouteValueDictionary dataTokens = null)
         {
             this.Url = url;
             this.RouteHandler = routeHandler;
@@ -98,6 +111,7 @@ namespace Elastic.Routing
             this.OutgoingDefaults = outgoingDefaults ?? EmptyValues;
             this.Constraints = constraints ?? EmptyValues;
             this.Projections = projections ?? new Dictionary<string, IRouteValueProjection>();
+            this.DataTokens = dataTokens;
 
             this.fullPathSegment = ParseSegments(url);
             this.urlMatch = BuildRegex(fullPathSegment);
@@ -144,7 +158,7 @@ namespace Elastic.Routing
                 if (valuesMediator.VisitedKeys.Contains(defaultValue.Key))
                     continue;
 
-                data.Values[defaultValue.Key] = valuesMediator.ResolveValue(defaultValue.Key);
+                data.Values[defaultValue.Key] = (string)valuesMediator.ResolveValue(defaultValue.Key);
             }
             
             foreach (var projection in Projections)
@@ -153,6 +167,8 @@ namespace Elastic.Routing
                     continue;
                 projection.Value.Incoming(projection.Key, data.Values);
             }
+
+            this.DataTokens.CopyTo(data.DataTokens);
 
             return data;
         }
@@ -186,6 +202,7 @@ namespace Elastic.Routing
                 url += '?' + queryString;
 
             var data = new VirtualPathData(this, url.ToLowerInvariant());
+            this.DataTokens.CopyTo(data.DataTokens);
             return data;
         }
 
@@ -242,7 +259,7 @@ namespace Elastic.Routing
         /// <returns>Returns the constructed URL or <c>null</c> if the URL cannot be constructed.</returns>
         protected virtual string ConstructUrl(FullPathSegment path, RouteValuesMediator valuesMediator)
         {
-            return path.GetUrlPart(valuesMediator.ResolveValue);
+            return (string)path.GetUrlPart((s) => valuesMediator.ResolveValue(s));
         }
 
         /// <summary>

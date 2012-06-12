@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Elastic.Routing.Parsing
 {
@@ -65,9 +66,21 @@ namespace Elastic.Routing.Parsing
         /// <returns>
         /// Returns the corresponding part of the URL or <c>null</c> when the value is missing.
         /// </returns>
-        public override string GetUrlPart(Func<string, string> valueGetter)
+        public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
         {
-            return valueGetter(Name);
+            var value = valueGetter(Name);
+            value = SegmentValue.Create(HttpUtility.UrlEncode((string)value), value != null && value.IsDefault);
+            return MatchesPattern((string)value) ? value : null;
+        }
+
+        /// <summary>
+        /// Matches the specified value against the current pattern.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The value indicating whether the the match is successful.</returns>
+        protected virtual bool MatchesPattern(string value)
+        {
+            return (value != null && Regex.IsMatch(value, "^" + pattern + "$"));
         }
     }
 }

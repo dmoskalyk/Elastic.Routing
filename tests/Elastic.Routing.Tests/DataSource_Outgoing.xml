@@ -11,6 +11,14 @@
     <Pattern>({folder}/){file}.{extension}</Pattern>
     <Url>root/file.txt</Url>
     <Result>true</Result>
+    <folder>root</folder>
+    <file>file</file>
+    <extension>txt</extension>
+  </Row>
+  <Row>
+    <Pattern>({folder}/){file}.{extension}</Pattern>
+    <Url>file.txt</Url>
+    <Result>true</Result>
     <default__folder>root</default__folder>
     <file>file</file>
     <extension>txt</extension>

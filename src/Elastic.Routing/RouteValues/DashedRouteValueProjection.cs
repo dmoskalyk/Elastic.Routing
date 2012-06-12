@@ -13,14 +13,17 @@ namespace Elastic.Routing.RouteValues
     public class DashedRouteValueProjection : IRouteValueProjection
     {
         HashSet<char> extraValidChars;
+        int maxLength;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DashedRouteValueProjection"/> class.
         /// </summary>
         /// <param name="allowSlash">if set to <c>true</c> the '/' characters are not replaced with dashes.</param>
-        public DashedRouteValueProjection(bool allowSlash)
+        /// <param name="maxLength">The maximum length of the result.</param>
+        public DashedRouteValueProjection(bool allowSlash, int maxLength = 0)
         {
             this.extraValidChars = allowSlash ? new HashSet<char> { '/' } : new HashSet<char>();
+            this.maxLength = maxLength;
         }
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace Elastic.Routing.RouteValues
         public void Outgoing(string key, RouteValueDictionary values)
         {
             var value = (string)values[key];
-            values[key] = Utils.DashedValue(value, extraValidChars);
+            values[key] = Utils.DashedValue(value, extraValidChars, maxLength);
         }
     }
 }

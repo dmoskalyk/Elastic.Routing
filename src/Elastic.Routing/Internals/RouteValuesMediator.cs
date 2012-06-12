@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Routing;
 using System.Text.RegularExpressions;
+using Elastic.Routing.Parsing;
 
 namespace Elastic.Routing.Internals
 {
@@ -78,18 +79,29 @@ namespace Elastic.Routing.Internals
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>Returns the current route value or default if available.</returns>
-        public virtual string ResolveValue(string key)
+        public virtual SegmentValue ResolveValue(string key)
         {
             VisitedKeys.Add(key);
             var value = values[key];
             if (value != null && !CheckCustomConstraint(key))
                 return null;
 
-            value = value ?? GetDefaultValue(key);
+            var defaultValue = GetDefaultValue(key);
             if (value == null)
-                return null;
+            {
+                if (defaultValue == null)
+                    return null;
+                else
+                    return SegmentValue.Create(defaultValue.ToString(), true);
+            }
             else
-                return value.ToString();
+            {
+                var strValue = value.ToString();
+                if (String.Equals(strValue, defaultValue != null ? defaultValue.ToString() : null, StringComparison.OrdinalIgnoreCase))
+                    return SegmentValue.Create(strValue, true);
+                else
+                    return SegmentValue.Create(strValue, false);
+            }
         }
 
         /// <summary>
@@ -112,13 +124,13 @@ namespace Elastic.Routing.Internals
         {
             foreach (var constraint in constraints)
             {
-                var objValue = values[constraint.Key];
-                if (objValue == null && (!requiredParameters.Contains(constraint.Key) || defaults.ContainsKey(constraint.Key)))
+                var value = (values[constraint.Key] ?? string.Empty).ToString();
+                if (String.IsNullOrEmpty(value) && (!requiredParameters.Contains(constraint.Key) || defaults.ContainsKey(constraint.Key)))
                     continue;
-                var value = (objValue ?? string.Empty).ToString();
                 if (constraint.Value is string)
                 {
-                    if (!Regex.IsMatch(value, (string)constraint.Value, RegexOptions.IgnoreCase))
+                    var pattern = String.Format("^({0})$", constraint.Value);
+                    if (!Regex.IsMatch(value, pattern, RegexOptions.IgnoreCase))
                         return false;
                 }
                 else

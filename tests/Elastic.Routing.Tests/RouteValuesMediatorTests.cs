@@ -36,7 +36,7 @@ namespace Elastic.Routing.Tests
         {
             var key1 = "value";
             var mediator = Create(RouteDirection.IncomingRequest, values: new { key1 });
-            var actual = mediator.ResolveValue("key1");
+            var actual = (string)mediator.ResolveValue("key1");
             Assert.AreEqual(key1, actual);
             Assert.IsTrue(mediator.VisitedKeys.Contains("key1"));
             Assert.IsFalse(mediator.InvalidatedKeys.Contains("key1"));
@@ -47,7 +47,7 @@ namespace Elastic.Routing.Tests
         {
             var key1 = "default value";
             var mediator = Create(RouteDirection.IncomingRequest, defaults: new { key1 });
-            var actual = mediator.ResolveValue("key1");
+            var actual = (string)mediator.ResolveValue("key1");
             Assert.AreEqual(key1, actual);
             Assert.IsTrue(mediator.VisitedKeys.Contains("key1"));
             Assert.IsFalse(mediator.InvalidatedKeys.Contains("key1"));
@@ -60,7 +60,7 @@ namespace Elastic.Routing.Tests
             var valueProvider = new Mock<IRouteValueProvider>();
             valueProvider.Setup(p => p.GetValue("key1", It.IsAny<RequestContext>())).Returns(key1);
             var mediator = Create(RouteDirection.IncomingRequest, defaults: new { key1 = valueProvider.Object });
-            var actual = mediator.ResolveValue("key1");
+            var actual = (string)mediator.ResolveValue("key1");
             Assert.AreEqual(key1, actual);
             Assert.IsTrue(mediator.VisitedKeys.Contains("key1"));
             Assert.IsFalse(mediator.InvalidatedKeys.Contains("key1"));
@@ -73,7 +73,7 @@ namespace Elastic.Routing.Tests
             var mediator = Create(RouteDirection.IncomingRequest, 
                 values: new { key1 }, 
                 constraints: new { key1 = CreateConstraint("key1", true) });
-            var actual = mediator.ResolveValue("key1");
+            var actual = (string)mediator.ResolveValue("key1");
             Assert.AreEqual(key1, actual);
             Assert.IsTrue(mediator.VisitedKeys.Contains("key1"));
             Assert.IsFalse(mediator.InvalidatedKeys.Contains("key1"));
@@ -99,7 +99,7 @@ namespace Elastic.Routing.Tests
             var mediator = Create(RouteDirection.IncomingRequest,
                 defaults: new { key1 },
                 constraints: new { key1 = CreateConstraint("key1", false) });
-            var actual = mediator.ResolveValue("key1");
+            var actual = (string)mediator.ResolveValue("key1");
             Assert.AreEqual(key1, actual);
             Assert.IsTrue(mediator.VisitedKeys.Contains("key1"));
             Assert.IsFalse(mediator.InvalidatedKeys.Contains("key1"));
