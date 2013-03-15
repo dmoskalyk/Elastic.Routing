@@ -147,7 +147,10 @@ namespace Elastic.Routing.Parsing
                 }
 
                 var name = match.Groups["n"].Value;
-                var customPattern = constraints != null ? constraints[name] as string : null;
+                var constraint = constraints != null ? constraints[name] : null;
+                var customPattern = (constraint is IRegexRouteConstraint) ?
+                    ((IRegexRouteConstraint)constraint).Pattern :
+                    constraint as string;
 
                 if (parameters.Contains(name))
                     throw new FormatException("Duplicate parameter: " + name);

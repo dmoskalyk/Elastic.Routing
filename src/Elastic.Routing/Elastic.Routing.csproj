@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DecoratedRouteHandler.cs" />
+    <Compile Include="IRegexRouteConstraint.cs" />
     <Compile Include="Parsing\SegmentValue.cs" />
     <Compile Include="Internals\Utils.cs" />
     <Compile Include="IRouteValueProjection.cs" />
