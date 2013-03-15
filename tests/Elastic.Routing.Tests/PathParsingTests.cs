@@ -41,7 +41,7 @@ namespace Elastic.Routing.Tests
         [TestMethod]
         public void PathSegmentParser_InvalidParameterSyntax()
         {
-            string url = "w/{title*}.aspx";
+            string url = "w/{title.aspx";
             var path = parser.Parse(url, constraints);
             Assert.IsNotNull(path);
             Assert.AreEqual(1, path.Segments.Count);

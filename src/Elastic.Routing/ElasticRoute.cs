@@ -15,7 +15,10 @@ namespace Elastic.Routing
     /// </summary>
     public class ElasticRoute : RouteBase
     {
-        private static RouteValueDictionary EmptyValues = new RouteValueDictionary();
+        private static RouteValueDictionary EmptyValues()
+        {
+            return new RouteValueDictionary();
+        }
 
         private Regex urlMatch;
         private FullPathSegment fullPathSegment;
@@ -64,6 +67,32 @@ namespace Elastic.Routing
         public RouteValueDictionary DataTokens { get; set; }
 
         /// <summary>
+        /// Gets the required parameters names.
+        /// </summary>
+        /// <value>
+        /// The required parameters names.
+        /// </value>
+        public HashSet<string> RequiredParameters { get; private set; }
+
+        /// <summary>
+        /// Gets the required parameters names.
+        /// </summary>
+        /// <value>
+        /// The required parameters names.
+        /// </value>
+        public HashSet<string> AllParameters { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElasticRoute"/> class.
+        /// </summary>
+        /// <param name="url">The URL pattern.</param>
+        /// <param name="routeHandler">The route handler.</param>
+        public ElasticRoute(string url, IRouteHandler routeHandler)
+            : this(url, routeHandler, EmptyValues(), null, null, null, null)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ElasticRoute"/> class.
         /// </summary>
         /// <param name="url">The URL pattern.</param>
@@ -107,16 +136,18 @@ namespace Elastic.Routing
         {
             this.Url = url;
             this.RouteHandler = routeHandler;
-            this.IncomingDefaults = incomingDefaults ?? EmptyValues;
-            this.OutgoingDefaults = outgoingDefaults ?? EmptyValues;
-            this.Constraints = constraints ?? EmptyValues;
+            this.IncomingDefaults = incomingDefaults ?? EmptyValues();
+            this.OutgoingDefaults = outgoingDefaults ?? EmptyValues();
+            this.Constraints = constraints ?? EmptyValues();
             this.Projections = projections ?? new Dictionary<string, IRouteValueProjection>();
-            this.DataTokens = dataTokens;
+            this.DataTokens = dataTokens ?? EmptyValues();
 
             this.fullPathSegment = ParseSegments(url);
             this.urlMatch = BuildRegex(fullPathSegment);
 
             this.routeWrapper = new RouteWrapper(this);
+            this.RequiredParameters = new HashSet<string>(fullPathSegment.RequiredParameters.Select(p => p.Name), StringComparer.InvariantCultureIgnoreCase);
+            this.AllParameters = new HashSet<string>(fullPathSegment.Parameters, StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -275,7 +306,7 @@ namespace Elastic.Routing
             {
                 if (valuesMediator.VisitedKeys.Contains(entry.Key) ||
                     valuesMediator.InvalidatedKeys.Contains(entry.Key) ||
-                    entry.Value == null ||
+                    entry.Value == null || string.Empty.Equals(entry.Value) ||
                     OutgoingDefaults.HasValue(entry.Key, entry.Value) ||
                     IncomingDefaults.HasValue(entry.Key, entry.Value))
                     continue;

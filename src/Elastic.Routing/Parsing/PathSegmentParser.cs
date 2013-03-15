@@ -19,7 +19,7 @@ namespace Elastic.Routing.Parsing
         /// <summary>
         /// A regex instance which matches path parameters.
         /// </summary>
-        protected Regex parameterRegex = new Regex(@"\{(?<wc>\*)?(?<n>\w+)\}", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        protected Regex parameterRegex = new Regex(@"\{(?<wc>\*)?(?<n>\w[^\}]*)\}", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathSegmentParser"/> class.

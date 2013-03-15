@@ -14,7 +14,7 @@ namespace Elastic.Routing
         /// <summary>
         /// The regex pattern matching the dashed value of at least one character with no dashes at its bounds.
         /// </summary>
-        public static string DashedValuePattern = "[^-/]([^/]*[^-/])?";
+        public static string DashedValuePattern = "[^-/_]([^/]*[^-/_])?";
 
         /// <summary>
         /// Gets the value from the current request's route data.
@@ -40,10 +40,13 @@ namespace Elastic.Routing
         /// </summary>
         /// <param name="allowSlash">if set to <c>true</c> the '/' characters are not replaced with dashes.</param>
         /// <param name="maxLength">The maximum length of the result.</param>
-        /// <returns>Returns the new instance of <see cref="DashedRouteValueProjection"/> class.</returns>
-        public static DashedRouteValueProjection DashedProjection(bool allowSlash, int maxLength = 0)
+        /// <param name="defaultValue">The default value to use when the dashed value appear to be empty.</param>
+        /// <returns>
+        /// Returns the new instance of <see cref="DashedRouteValueProjection" /> class.
+        /// </returns>
+        public static DashedRouteValueProjection DashedProjection(bool allowSlash, int maxLength = 0, string defaultValue = null)
         {
-            return new DashedRouteValueProjection(allowSlash, maxLength);
+            return new DashedRouteValueProjection(allowSlash, maxLength, defaultValue);
         }
 
         /// <summary>

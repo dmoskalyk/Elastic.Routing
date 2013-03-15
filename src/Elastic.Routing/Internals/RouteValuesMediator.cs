@@ -70,8 +70,8 @@ namespace Elastic.Routing.Internals
             this.defaults = defaults;
             this.constraints = constraints;
             this.routeDirection = routeDirection;
-            this.InvalidatedKeys = new HashSet<string>();
-            this.VisitedKeys = new HashSet<string>();
+            this.InvalidatedKeys = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+            this.VisitedKeys = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using Elastic.Routing.Internals;
 
 namespace Elastic.Routing.Parsing
 {
@@ -13,6 +14,7 @@ namespace Elastic.Routing.Parsing
     public class ParameterPathSegment : PathSegment
     {
         private string pattern;
+        private string matchGroupName;
 
         /// <summary>
         /// Gets the parameter name.
@@ -27,6 +29,7 @@ namespace Elastic.Routing.Parsing
         public ParameterPathSegment(string name, string customPattern = null)
         {
             this.Name = name;
+            this.matchGroupName = new string(name.Where(c => Char.IsLetterOrDigit(c)).ToArray());
             this.pattern = customPattern ?? GetDefaultRegexPattern();
         }
 
@@ -36,7 +39,7 @@ namespace Elastic.Routing.Parsing
         /// <returns></returns>
         public sealed override string GetRegexPattern()
         {
-            return @"(?<" + Name + @">" + pattern + ")";
+            return @"(?<" + matchGroupName + @">" + pattern + ")";
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Elastic.Routing.Parsing
         /// <param name="valueSetter">The route value setter used to extract value(s).</param>
         public override void ExtractRouteValues(Match match, Action<string, object> valueSetter)
         {
-            var group = match.Groups[Name];
+            var group = match.Groups[matchGroupName];
             valueSetter(Name, group.Success ? group.Value : null);
         }
 
@@ -69,7 +72,7 @@ namespace Elastic.Routing.Parsing
         public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
         {
             var value = valueGetter(Name);
-            value = SegmentValue.Create(HttpUtility.UrlEncode((string)value), value != null && value.IsDefault);
+            value = SegmentValue.Create(Utils.UrlEncode((string)value), value != null && value.IsDefault);
             return MatchesPattern((string)value) ? value : null;
         }
 

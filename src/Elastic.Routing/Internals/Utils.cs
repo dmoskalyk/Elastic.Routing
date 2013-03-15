@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Routing;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Elastic.Routing.Internals
 {
@@ -78,7 +79,7 @@ namespace Elastic.Routing.Internals
             var s = sb.ToString();
             if (maxLength > 0 && sb.Length > maxLength)
             {
-                s = sb.ToString().Substring(0, maxLength);
+                s = s.Substring(0, maxLength);
                 if (sb[maxLength] != '-')
                 {
                     var prevDashIndex = s.LastIndexOf('-');
@@ -86,7 +87,7 @@ namespace Elastic.Routing.Internals
                         s = s.Remove(prevDashIndex);
                 }
             }
-            return s;
+            return s.Trim('_');
         }
 
         /// <summary>
@@ -162,6 +163,21 @@ namespace Elastic.Routing.Internals
                 return new RouteValueDictionary((IDictionary<string, object>)data);
             else
                 return new RouteValueDictionary(data);
+        }
+
+        /// <summary>
+        /// Encodes the route value to be used in the URL.
+        /// Replicates the behavior of the standard <see cref="System.Web.Routing.Route"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>Returns the URL-encoded value.</returns>
+        public static string UrlEncode(this string value)
+        {
+            if (String.IsNullOrEmpty(value))
+                return value;
+
+            return Regex.Replace(Uri.EscapeUriString(value), "([#;?:@&=+$,])",
+                m => "%" + Convert.ToUInt16(m.Value[0]).ToString("x2", CultureInfo.InvariantCulture));
         }
     }
 }
