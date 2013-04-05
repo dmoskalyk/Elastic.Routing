@@ -76,7 +76,7 @@ This pattern will match the following urls:
 
 Constraints work in the same way as in the standard ASP.NET Routing.
 
-Constraints can be strings of regular expression format or objects of type `IRouteConstraint` which comes from the standard `System.Web.Routing` library.
+Constraint can be a string of regular expression format, an object implementing `IRouteConstraint` interface which comes from the standard `System.Web.Routing` library or an object implementing `IRegexRouteConstraint` which combines both previous options.
 
 **Be aware that constraints are not evaluated on default values (both incoming and outgoing) and optional parameters which have not been matched in the incoming URL.**
 
