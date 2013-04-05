@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Elastic.Routing</id>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <title>Elastic.Routing</title>
     <authors>Dmitry Moskalyk</authors>
     <owners>Dmitry Moskalyk</owners>
