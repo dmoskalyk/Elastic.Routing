@@ -52,28 +52,30 @@ namespace Elastic.Routing.Internals
                 return value;
 
             var sb = new StringBuilder();
-            bool isPrevDash = true;
+            bool isPrevSep = true;
             foreach (var ch in value)
             {
                 if (wordCharCategories.Contains(Char.GetUnicodeCategory(ch)))
                 {
                     sb.Append(ch);
-                    isPrevDash = false;
+                    isPrevSep = false;
                 }
                 else if (extraValidChars.Contains(ch))
                 {
+                    bool isPrevDash = isPrevSep && sb[sb.Length - 1] == '-';
                     if (isPrevDash)
                         sb.Length--;
-                    sb.Append(ch);
-                    isPrevDash = false;
+                    if (!isPrevSep || isPrevDash)
+                        sb.Append(ch);
+                    isPrevSep = true;
                 }
-                else if (!isPrevDash)
+                else if (!isPrevSep)
                 {
                     sb.Append('-');
-                    isPrevDash = true;
+                    isPrevSep = true;
                 }
             }
-            if (sb.Length > 0 && isPrevDash)
+            if (sb.Length > 0 && isPrevSep)
                 sb.Length--;
 
             var s = sb.ToString();

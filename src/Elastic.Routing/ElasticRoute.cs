@@ -306,7 +306,7 @@ namespace Elastic.Routing
             {
                 if (valuesMediator.VisitedKeys.Contains(entry.Key) ||
                     valuesMediator.InvalidatedKeys.Contains(entry.Key) ||
-                    entry.Value == null || string.Empty.Equals(entry.Value) ||
+                    entry.Value == null || 
                     OutgoingDefaults.HasValue(entry.Key, entry.Value) ||
                     IncomingDefaults.HasValue(entry.Key, entry.Value))
                     continue;

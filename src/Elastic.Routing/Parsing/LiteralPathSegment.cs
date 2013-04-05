@@ -53,7 +53,7 @@ namespace Elastic.Routing.Parsing
         /// </returns>
         public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
         {
-            return (SegmentValue)this.Text;
+            return SegmentValue.Create(this.Text, true);
         }
     }
 }

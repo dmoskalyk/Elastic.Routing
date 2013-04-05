@@ -61,6 +61,7 @@
     <Compile Include="RouteValuesMediatorTests.cs" />
     <Compile Include="UrlGenerationTests.cs" />
     <Compile Include="UrlMatchingTests.cs" />
+    <Compile Include="UtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Elastic.Routing\Elastic.Routing.csproj">

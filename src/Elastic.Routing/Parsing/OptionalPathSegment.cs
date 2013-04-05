@@ -68,11 +68,10 @@ namespace Elastic.Routing.Parsing
             if (parts.Any(p => p == null))
                 return (SegmentValue)string.Empty;
 
-            var zip = Segments.Zip(parts, (s, p) => new { Segment = s, Part = p }).Where(i => i.Segment is ParameterPathSegment).ToList();
-            if (zip.Count > 0 && zip.All(i => i.Part.IsDefault))
-                return (SegmentValue)string.Empty;
-
-            return (SegmentValue)string.Concat(parts.Select(s => s.ToString()));
+            var zip = Segments.Zip(parts, (s, p) => new { Segment = s, Part = p }).ToList();
+            bool isDefault = zip.Count == 0 || zip.All(i => i.Part.IsDefault);
+            var result = string.Concat(parts.Select(s => s.ToString()));
+            return SegmentValue.Create(result, isDefault);
         }
     }
 }

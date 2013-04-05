@@ -17,7 +17,7 @@
   </Row>
   <Row>
     <Pattern>({folder}/){file}.{extension}</Pattern>
-    <Url>file.txt</Url>
+    <Url>root/file.txt</Url>
     <Result>true</Result>
     <default__folder>root</default__folder>
     <file>file</file>
