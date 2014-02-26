@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Elastic.Routing.RouteValues;
+using Elastic.Routing.Constraints;
 
 namespace Elastic.Routing
 {
@@ -58,6 +59,16 @@ namespace Elastic.Routing
         public static ReplaceRouteValueProjection Replace(string what, string with)
         {
             return new ReplaceRouteValueProjection(what, with);
+        }
+
+        /// <summary>
+        /// Create a constraint which requires a specific value to be present during the URL construction.
+        /// </summary>
+        /// <param name="value">The expected value. If not specified, only parameter existence is checked, but not the value itself.</param>
+        /// <returns>Return a constaint instance.</returns>
+        public static RequiredValueConstraint Required(string value = null)
+        {
+            return new RequiredValueConstraint(value);
         }
     }
 }

@@ -65,13 +65,29 @@ namespace Elastic.Routing.Parsing
         public override SegmentValue GetUrlPart(Func<string, SegmentValue> valueGetter)
         {
             var parts = Segments.Select(s => s.GetUrlPart(valueGetter)).ToList();
-            if (parts.Any(p => p == null))
-                return (SegmentValue)string.Empty;
+            if (parts.Any(p => p == null) || parts.Count == 0)
+                return SegmentValue.Empty;
 
-            var zip = Segments.Zip(parts, (s, p) => new { Segment = s, Part = p }).ToList();
-            bool isDefault = zip.Count == 0 || zip.All(i => i.Part.IsDefault);
+            if (ShouldBeEmpty(parts))
+                return SegmentValue.Empty;
             var result = string.Concat(parts.Select(s => s.ToString()));
-            return SegmentValue.Create(result, isDefault);
+            return SegmentValue.Create(result);
+        }
+
+        private bool ShouldBeEmpty(IList<SegmentValue> parts)
+        {
+            var zip = Segments.Zip(parts, (s, p) => new { Segment = s, Value = p }).ToList();
+            bool hasParameters = false;
+            foreach (var item in zip)
+            {
+                if (item.Segment is ParameterPathSegment)
+                {
+                    hasParameters = true;
+                    if (!item.Value.IsDefault)
+                        return false;
+                }
+            }
+            return hasParameters;
         }
     }
 }

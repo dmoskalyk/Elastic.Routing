@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Elastic.Routing</id>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <title>Elastic.Routing</title>
     <authors>Dmitry Moskalyk</authors>
     <owners>Dmitry Moskalyk</owners>
@@ -10,9 +10,9 @@
     <projectUrl>https://github.com/lokiworld/Elastic.Routing</projectUrl>
 	<iconUrl>https://github.com/lokiworld/Elastic.Routing/raw/master/assets/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A package with powerful routing features.</description>
+    <description>An ASP.NET routing extension package with the support of flexible wildcard parameters, optional URL parts, extended constraints etc.</description>
     <releaseNotes>Stable version.</releaseNotes>
-    <copyright>Copyright 2012</copyright>
+    <copyright>Copyright 2014</copyright>
     <tags>ASP.NET MVC Routing</tags>
   </metadata>
 </package>

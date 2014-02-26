@@ -49,6 +49,7 @@
     <Reference Include="System.Web.Routing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constraints\RequiredValueConstraint.cs" />
     <Compile Include="DecoratedRouteHandler.cs" />
     <Compile Include="IRegexRouteConstraint.cs" />
     <Compile Include="Parsing\SegmentValue.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="RouteValues\DashedRouteValueProjection.cs" />
     <Compile Include="RouteValues\ReplaceRouteValueProjection.cs" />
     <Compile Include="RouteValues\OriginalRouteValueProvider.cs" />
-    <Compile Include="RoutingExtensions.cs" />
+    <Compile Include="ElasticRoutingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Elastic.Routing.nuspec" />

@@ -1,6 +1,6 @@
 # Elastic.Routing
 
-Flexible routing extensions for ASP.NET 4.
+An ASP.NET routing extension package with the support of flexible wildcard parameters, optional URL parts, extended constraints etc.
 It does not replace the ASP.NET Routing but extends its possibilities.
 
 ## Installation

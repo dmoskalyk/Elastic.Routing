@@ -13,8 +13,15 @@ namespace Elastic.Routing
     /// <summary>
     /// An featured route with the support of wildcard parameters, optional parts etc.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Url: {Url}, Handler: {RouteHandler.GetType().Name}")]
     public class ElasticRoute : RouteBase
     {
+        /// <summary>
+        /// The list of system route value keys which are used in URL construction to be not included in the query string and are always checked for being matched by their constraints (if any).
+        /// By default, they are "controller", "action" and "route".
+        /// </summary>
+        protected static HashSet<string> systemRouteValueKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "controller", "action", "route" };
+
         private static RouteValueDictionary EmptyValues()
         {
             return new RouteValueDictionary();
@@ -223,9 +230,12 @@ namespace Elastic.Routing
             }
 
             var valuesMediator = CreateMediator(requestContext, routeValues, RouteDirection.UrlGeneration);
+            var parametersToCheck = fullPathSegment.RequiredParameters.Select(p => p.Name).Concat(systemRouteValueKeys);
+            if (!valuesMediator.MatchConstraints(new HashSet<string>(parametersToCheck)))
+                return null;
+
             var url = ConstructUrl(fullPathSegment, valuesMediator);
-            if (url == null || !urlMatch.IsMatch(url) ||
-                !valuesMediator.MatchConstraints(new HashSet<string>(fullPathSegment.RequiredParameters.Select(p => p.Name))))
+            if (url == null || !urlMatch.IsMatch(url))
                 return null;
 
             var queryString = BuildQueryString(valuesMediator, routeValues);
@@ -304,7 +314,8 @@ namespace Elastic.Routing
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             foreach (var entry in values)
             {
-                if (valuesMediator.VisitedKeys.Contains(entry.Key) ||
+                if (systemRouteValueKeys.Contains(entry.Key) ||
+                    valuesMediator.VisitedKeys.Contains(entry.Key) ||
                     valuesMediator.InvalidatedKeys.Contains(entry.Key) ||
                     entry.Value == null || 
                     OutgoingDefaults.HasValue(entry.Key, entry.Value) ||

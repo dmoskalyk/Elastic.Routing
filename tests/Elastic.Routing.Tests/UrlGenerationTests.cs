@@ -44,6 +44,21 @@ namespace Elastic.Routing.Tests
         }
 
         [TestMethod]
+        public void ElasticRoute_GetVirtualPath_DefaultValueIsNotAdded()
+        {
+            var routeCollection = new RouteCollection()
+            {
+                new ElasticRoute("{controller}/({action})", routeHandler: routeHandler,
+                    constraints: new { controller = "Controller1", action = "Action1" },
+                    outgoingDefaults: new { controller = "Controller1", action = "Action1" })
+            };
+
+            var routeValues = new RouteValueDictionary(new { controller = "Controller1", action = "Action1" });
+            var virtualPath = routeCollection.GetVirtualPath(requestContext, routeValues);
+            Assert.AreEqual("/controller1/", virtualPath.VirtualPath);
+        }
+
+        [TestMethod]
         [DeploymentItem("Elastic.Routing.Tests\\DataSource_Common.xml")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML",
             "|DataDirectory|\\DataSource_Common.xml",

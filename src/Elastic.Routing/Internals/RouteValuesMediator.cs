@@ -124,14 +124,20 @@ namespace Elastic.Routing.Internals
         {
             foreach (var constraint in constraints)
             {
-                var value = (values[constraint.Key] ?? string.Empty).ToString();
-                if (String.IsNullOrEmpty(value) && (!requiredParameters.Contains(constraint.Key) || defaults.ContainsKey(constraint.Key)))
+                if (!requiredParameters.Contains(constraint.Key))
                     continue;
+                var value = (values[constraint.Key] ?? string.Empty).ToString();
                 if (constraint.Value is string)
                 {
+                    if (String.IsNullOrEmpty(value))
+                        continue;
                     var pattern = String.Format("^({0})$", constraint.Value);
                     if (!Regex.IsMatch(value, pattern, RegexOptions.IgnoreCase))
                         return false;
+                }
+                else if (String.IsNullOrEmpty(value) && defaults.ContainsKey(constraint.Key))
+                {
+                    return true;
                 }
                 else
                 {

@@ -17,10 +17,40 @@
   </Row>
   <Row>
     <Pattern>({folder}/){file}.{extension}</Pattern>
-    <Url>root/file.txt</Url>
+    <Url>file.txt</Url>
     <Result>true</Result>
     <default__folder>root</default__folder>
     <file>file</file>
     <extension>txt</extension>
+  </Row>
+  <Row>
+    <Pattern>({folder}/){file}.{extension}</Pattern>
+    <Url>file.txt</Url>
+    <Result>true</Result>
+    <default__folder>root</default__folder>
+    <file>file</file>
+    <extension>txt</extension>
+    <folder>root</folder>
+  </Row>
+  <Row>
+    <Pattern>({folder}/){file}.{extension}</Pattern>
+    <Url>other/file.txt</Url>
+    <Result>true</Result>
+    <default__folder>root</default__folder>
+    <file>file</file>
+    <extension>txt</extension>
+    <folder>other</folder>
+  </Row>
+  <Row>
+    <Pattern>({lang}(/))</Pattern>
+    <Url>en/</Url>
+    <Result>true</Result>
+    <lang>en</lang>
+  </Row>
+  <Row>
+    <Pattern>{folder}(/)</Pattern>
+    <Url>test/</Url>
+    <Result>true</Result>
+    <folder>test</folder>
   </Row>
 </Rows>

@@ -11,6 +11,11 @@ namespace Elastic.Routing.Parsing
     public sealed class SegmentValue
     {
         /// <summary>
+        /// The empty segment value.
+        /// </summary>
+        public static readonly SegmentValue Empty = new SegmentValue() { Value = string.Empty };
+
+        /// <summary>
         /// Gets or sets the string value.
         /// </summary>
         /// <value>
