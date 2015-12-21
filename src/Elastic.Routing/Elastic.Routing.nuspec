@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Elastic.Routing</id>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <title>Elastic.Routing</title>
     <authors>Dmitry Moskalyk</authors>
     <owners>Dmitry Moskalyk</owners>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An ASP.NET routing extension package with the support of flexible wildcard parameters, optional URL parts, extended constraints etc.</description>
     <releaseNotes>Stable version.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <copyright>Copyright 2012-2015</copyright>
     <tags>ASP.NET MVC Routing</tags>
   </metadata>
 </package>

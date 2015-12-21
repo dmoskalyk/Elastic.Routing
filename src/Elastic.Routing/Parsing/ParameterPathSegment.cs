@@ -50,7 +50,8 @@ namespace Elastic.Routing.Parsing
         public override void ExtractRouteValues(Match match, Action<string, object> valueSetter)
         {
             var group = match.Groups[matchGroupName];
-            valueSetter(Name, group.Success ? group.Value : null);
+            if (group.Success)
+                valueSetter(Name, group.Value);
         }
 
         /// <summary>
