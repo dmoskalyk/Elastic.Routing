@@ -2,10 +2,10 @@
 <package >
   <metadata>
     <id>Elastic.Routing</id>
-    <version>1.0.6</version>
+    <version>$version$</version>
     <title>Elastic.Routing</title>
-    <authors>Dmitry Moskalyk</authors>
-    <owners>Dmitry Moskalyk</owners>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
     <licenseUrl>https://github.com/lokiworld/Elastic.Routing/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/lokiworld/Elastic.Routing</projectUrl>
 	<iconUrl>https://github.com/lokiworld/Elastic.Routing/raw/master/assets/icon.png</iconUrl>

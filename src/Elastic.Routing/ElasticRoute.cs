@@ -311,7 +311,7 @@ namespace Elastic.Routing
         /// <returns>Returns the query string or <c>null</c> when it cannot be built.</returns>
         protected virtual string BuildQueryString(RouteValuesMediator valuesMediator, RouteValueDictionary values)
         {
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            var queryString = new List<KeyValuePair<string, object>>();
             foreach (var entry in values)
             {
                 if (systemRouteValueKeys.Contains(entry.Key) ||
@@ -322,13 +322,14 @@ namespace Elastic.Routing
                     IncomingDefaults.HasValue(entry.Key, entry.Value))
                     continue;
 
-                queryString[entry.Key] = entry.Value.ToString();
+                queryString.Add(entry);
             }
 
-            if (queryString.Count > 0)
-                return queryString.ToString();
-            else
+            if (queryString.Count == 0)
                 return null;
+
+            var pairs = queryString.Select(e => HttpUtility.UrlEncode(e.Key) + "=" + HttpUtility.UrlEncode(e.Value.ToString()));
+            return string.Join("&", pairs);
         }
     }
 }
