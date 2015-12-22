@@ -59,6 +59,19 @@ namespace Elastic.Routing.Tests
         }
 
         [TestMethod]
+        public void ElasticRoute_GetVirtualPath_DiacriticsInQueryString()
+        {
+            var routeCollection = new RouteCollection()
+            {
+                new ElasticRoute("search", routeHandler: routeHandler)
+            };
+
+            var routeValues = new RouteValueDictionary(new { q = "ball ø" });
+            var virtualPath = routeCollection.GetVirtualPath(requestContext, routeValues);
+            Assert.AreEqual("/search?q=ball+%c3%b8", virtualPath.VirtualPath);
+        }
+
+        [TestMethod]
         [DeploymentItem("Elastic.Routing.Tests\\DataSource_Common.xml")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML",
             "|DataDirectory|\\DataSource_Common.xml",
