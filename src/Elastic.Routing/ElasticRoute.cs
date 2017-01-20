@@ -238,11 +238,12 @@ namespace Elastic.Routing
             if (url == null || !urlMatch.IsMatch(url))
                 return null;
 
+            url = url.ToLowerInvariant();
             var queryString = BuildQueryString(valuesMediator, routeValues);
             if (queryString != null)
-                url += '?' + queryString;
+                url += "?" + queryString;
 
-            var data = new VirtualPathData(this, url.ToLowerInvariant());
+            var data = new VirtualPathData(this, url);
             this.DataTokens.CopyTo(data.DataTokens);
             return data;
         }
