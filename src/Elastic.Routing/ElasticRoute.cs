@@ -136,7 +136,7 @@ namespace Elastic.Routing
         /// <param name="dataTokens">The data tokens.</param>
         public ElasticRoute(string url, IRouteHandler routeHandler,
             RouteValueDictionary constraints = null,
-            RouteValueDictionary incomingDefaults = null, 
+            RouteValueDictionary incomingDefaults = null,
             RouteValueDictionary outgoingDefaults = null,
             IDictionary<string, IRouteValueProjection> projections = null,
             RouteValueDictionary dataTokens = null)
@@ -149,12 +149,21 @@ namespace Elastic.Routing
             this.Projections = projections ?? new Dictionary<string, IRouteValueProjection>();
             this.DataTokens = dataTokens ?? EmptyValues();
 
-            this.fullPathSegment = ParseSegments(url);
-            this.urlMatch = BuildRegex(fullPathSegment);
-
             this.routeWrapper = new RouteWrapper(this);
+            Reinitialize();
+        }
+
+        /// <summary>
+        /// Parses the URL pattern to reflect new route constraints.
+        /// </summary>
+        public void Reinitialize()
+        {
+            this.fullPathSegment = ParseSegments(this.Url);
+
             this.RequiredParameters = new HashSet<string>(fullPathSegment.RequiredParameters.Select(p => p.Name), StringComparer.InvariantCultureIgnoreCase);
             this.AllParameters = new HashSet<string>(fullPathSegment.Parameters, StringComparer.InvariantCultureIgnoreCase);
+
+            this.urlMatch = BuildRegex(fullPathSegment);
         }
 
         /// <summary>
@@ -198,7 +207,7 @@ namespace Elastic.Routing
 
                 data.Values[defaultValue.Key] = (string)valuesMediator.ResolveValue(defaultValue.Key);
             }
-            
+
             foreach (var projection in Projections)
             {
                 if (projection.Value == null)
@@ -317,7 +326,7 @@ namespace Elastic.Routing
                 if (systemRouteValueKeys.Contains(entry.Key) ||
                     valuesMediator.VisitedKeys.Contains(entry.Key) ||
                     valuesMediator.InvalidatedKeys.Contains(entry.Key) ||
-                    entry.Value == null || 
+                    entry.Value == null ||
                     OutgoingDefaults.HasValue(entry.Key, entry.Value) ||
                     IncomingDefaults.HasValue(entry.Key, entry.Value))
                     continue;
