@@ -53,4 +53,12 @@
     <Result>true</Result>
     <folder>test</folder>
   </Row>
+  <Row>
+    <Pattern>{controller}/{action}</Pattern>
+    <Url>con/act?param=abcABC123</Url>
+    <Result>true</Result>
+    <controller>Con</controller>
+    <action>Act</action>
+    <param>abcABC123</param>
+  </Row>
 </Rows>

@@ -21,6 +21,36 @@ namespace Elastic.Routing.Tests
         }
 
         [TestMethod]
+        public void ElasticRoute_GetRouteData_OptionalParameter_IsNotAddedToRouteValues()
+        {
+            var routeCollection = new RouteCollection()
+            {
+                new ElasticRoute("page(/{id})", routeHandler: routeHandler)
+            };
+
+            request.SetupGet(r => r.AppRelativeCurrentExecutionFilePath).Returns("~/page");
+            var routeData = routeCollection.GetRouteData(context.Object);
+            Assert.IsNotNull(routeData);
+            Assert.AreEqual(0, routeData.Values.Count);
+        }
+
+        [TestMethod]
+        public void ElasticRoute_GetRouteData_OptionalParameter_IsAddedToRouteValues()
+        {
+            var routeCollection = new RouteCollection()
+            {
+                new ElasticRoute("page(/{id})", routeHandler: routeHandler)
+            };
+
+            request.SetupGet(r => r.AppRelativeCurrentExecutionFilePath).Returns("~/page/test");
+            var routeData = routeCollection.GetRouteData(context.Object);
+            Assert.IsNotNull(routeData);
+            Assert.AreEqual(1, routeData.Values.Count);
+            Assert.IsTrue(routeData.Values.ContainsKey("id"));
+            Assert.AreEqual("test", routeData.Values["id"]);
+        }
+
+        [TestMethod]
         [DeploymentItem("Elastic.Routing.Tests\\DataSource_Common.xml")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML",
             "|DataDirectory|\\DataSource_Common.xml", 
