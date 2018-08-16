@@ -150,9 +150,9 @@ namespace Elastic.Routing
 
             this.routeWrapper = new RouteWrapper(this);
 
-            foreach (var projection in Projections.Values.OfType<IDynamicRegexRouteConstraint>())
+            foreach (var constraint in Constraints.Values.OfType<IDynamicRegexRouteConstraint>())
             {
-                projection.RegexChanged += OnRegexChanged;
+                constraint.RegexChanged += OnRegexChanged;
             }
 
             var fullPathSegment = ParseSegments(url);
