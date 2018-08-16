@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Constraints\RequiredValueConstraint.cs" />
     <Compile Include="DecoratedRouteHandler.cs" />
+    <Compile Include="IDynamicRegexRouteConstraint.cs" />
     <Compile Include="IRegexRouteConstraint.cs" />
     <Compile Include="Parsing\SegmentValue.cs" />
     <Compile Include="Internals\Utils.cs" />

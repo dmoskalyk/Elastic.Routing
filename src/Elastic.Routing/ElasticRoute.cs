@@ -27,8 +27,7 @@ namespace Elastic.Routing
             return new RouteValueDictionary();
         }
 
-        private Regex urlMatch;
-        private FullPathSegment fullPathSegment;
+        private InnerData PatternData;
 
         /// <summary>
         /// A route wrapper to be passed to the custom route constraints.
@@ -136,7 +135,7 @@ namespace Elastic.Routing
         /// <param name="dataTokens">The data tokens.</param>
         public ElasticRoute(string url, IRouteHandler routeHandler,
             RouteValueDictionary constraints = null,
-            RouteValueDictionary incomingDefaults = null, 
+            RouteValueDictionary incomingDefaults = null,
             RouteValueDictionary outgoingDefaults = null,
             IDictionary<string, IRouteValueProjection> projections = null,
             RouteValueDictionary dataTokens = null)
@@ -149,12 +148,31 @@ namespace Elastic.Routing
             this.Projections = projections ?? new Dictionary<string, IRouteValueProjection>();
             this.DataTokens = dataTokens ?? EmptyValues();
 
-            this.fullPathSegment = ParseSegments(url);
-            this.urlMatch = BuildRegex(fullPathSegment);
-
             this.routeWrapper = new RouteWrapper(this);
+
+            foreach (var projection in Projections.Values.OfType<IDynamicRegexRouteConstraint>())
+            {
+                projection.RegexChanged += OnRegexChanged;
+            }
+
+            var fullPathSegment = ParseSegments(url);
+            var urlMatch = BuildRegex(fullPathSegment);
+            this.PatternData = new InnerData(urlMatch, fullPathSegment);
+
             this.RequiredParameters = new HashSet<string>(fullPathSegment.RequiredParameters.Select(p => p.Name), StringComparer.InvariantCultureIgnoreCase);
             this.AllParameters = new HashSet<string>(fullPathSegment.Parameters, StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// An event handler which rebuilds <see cref="PatternData"/> after regex constraint changed.
+        /// </summary>
+        /// <param name="sender">The constraint which fired the event.</param>
+        /// <param name="e">An <see cref="System.EventArgs"/> that contains no event data.</param>
+        protected void OnRegexChanged(object sender, EventArgs e)
+        {
+            var fullPathSegment = ParseSegments(Url);
+            var urlMatch = BuildRegex(fullPathSegment);
+            this.PatternData = new InnerData(urlMatch, fullPathSegment);
         }
 
         /// <summary>
@@ -181,13 +199,15 @@ namespace Elastic.Routing
         /// </returns>
         protected virtual RouteData GetRouteData(HttpContextBase httpContext, string path)
         {
-            var match = urlMatch.Match(path);
+            var _patternData = PatternData;
+
+            var match = _patternData.UrlMatch.Match(path);
             if (!match.Success)
                 return null;
 
             var data = new RouteData(this, RouteHandler);
             var valuesMediator = CreateMediator(httpContext.Request.RequestContext, data.Values, RouteDirection.IncomingRequest);
-            ExtractRouteValues(fullPathSegment, match, valuesMediator);
+            ExtractRouteValues(_patternData.FullPathSegment, match, valuesMediator);
             if (valuesMediator.InvalidatedKeys.Count > 0)
                 return null;
 
@@ -198,7 +218,7 @@ namespace Elastic.Routing
 
                 data.Values[defaultValue.Key] = (string)valuesMediator.ResolveValue(defaultValue.Key);
             }
-            
+
             foreach (var projection in Projections)
             {
                 if (projection.Value == null)
@@ -221,6 +241,10 @@ namespace Elastic.Routing
         /// </returns>
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
+            var _patternData = PatternData;
+            FullPathSegment fullPathSegment = _patternData.FullPathSegment;
+            Regex urlMatch = _patternData.UrlMatch;
+
             var routeValues = new RouteValueDictionary(values);
             foreach (var projection in Projections)
             {
@@ -318,10 +342,12 @@ namespace Elastic.Routing
                 if (systemRouteValueKeys.Contains(entry.Key) ||
                     valuesMediator.VisitedKeys.Contains(entry.Key) ||
                     valuesMediator.InvalidatedKeys.Contains(entry.Key) ||
-                    entry.Value == null || 
+                    entry.Value == null ||
                     OutgoingDefaults.HasValue(entry.Key, entry.Value) ||
                     IncomingDefaults.HasValue(entry.Key, entry.Value))
+                {
                     continue;
+                }
 
                 queryString.Add(entry);
             }
@@ -331,6 +357,18 @@ namespace Elastic.Routing
 
             var pairs = queryString.Select(e => HttpUtility.UrlEncode(e.Key) + "=" + HttpUtility.UrlEncode(e.Value.ToString()));
             return string.Join("&", pairs);
+        }
+
+        private struct InnerData
+        {
+            public readonly Regex UrlMatch;
+            public readonly FullPathSegment FullPathSegment;
+
+            public InnerData(Regex urlMatch, FullPathSegment fullPathSegment)
+            {
+                UrlMatch = urlMatch;
+                FullPathSegment = fullPathSegment;
+            }
         }
     }
 }

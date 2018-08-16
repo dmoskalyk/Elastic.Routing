@@ -9,6 +9,7 @@ namespace Elastic.Routing
     /// <summary>
     /// An interface representing a route constraint which can also provide a regular expression pattern in addition to custom constrain logic.
     /// </summary>
+    /// <seealso cref="IDynamicRegexRouteConstraint"/>
     public interface IRegexRouteConstraint : IRouteConstraint
     {
         /// <summary>
