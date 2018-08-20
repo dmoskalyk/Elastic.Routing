@@ -53,6 +53,7 @@
     <Compile Include="DecoratedRouteHandler.cs" />
     <Compile Include="IDynamicRegexRouteConstraint.cs" />
     <Compile Include="IRegexRouteConstraint.cs" />
+    <Compile Include="ParsedRoutePattern.cs" />
     <Compile Include="Parsing\SegmentValue.cs" />
     <Compile Include="Internals\Utils.cs" />
     <Compile Include="IRouteValueProjection.cs" />

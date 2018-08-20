@@ -27,7 +27,7 @@ namespace Elastic.Routing
             return new RouteValueDictionary();
         }
 
-        private InnerData PatternData;
+        private ParsedRoutePattern parsedPattern;
 
         /// <summary>
         /// A route wrapper to be passed to the custom route constraints.
@@ -157,14 +157,14 @@ namespace Elastic.Routing
 
             var fullPathSegment = ParseSegments(url);
             var urlMatch = BuildRegex(fullPathSegment);
-            this.PatternData = new InnerData(urlMatch, fullPathSegment);
+            this.parsedPattern = new ParsedRoutePattern(urlMatch, fullPathSegment);
 
             this.RequiredParameters = new HashSet<string>(fullPathSegment.RequiredParameters.Select(p => p.Name), StringComparer.InvariantCultureIgnoreCase);
             this.AllParameters = new HashSet<string>(fullPathSegment.Parameters, StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
-        /// An event handler which rebuilds <see cref="PatternData"/> after regex constraint changed.
+        /// An event handler which rebuilds <see cref="parsedPattern"/> after regex constraint changed.
         /// </summary>
         /// <param name="sender">The constraint which fired the event.</param>
         /// <param name="e">An <see cref="System.EventArgs"/> that contains no event data.</param>
@@ -172,7 +172,7 @@ namespace Elastic.Routing
         {
             var fullPathSegment = ParseSegments(Url);
             var urlMatch = BuildRegex(fullPathSegment);
-            this.PatternData = new InnerData(urlMatch, fullPathSegment);
+            this.parsedPattern = new ParsedRoutePattern(urlMatch, fullPathSegment);
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Elastic.Routing
         /// </returns>
         protected virtual RouteData GetRouteData(HttpContextBase httpContext, string path)
         {
-            var _patternData = PatternData;
+            var _patternData = parsedPattern;
 
             var match = _patternData.UrlMatch.Match(path);
             if (!match.Success)
@@ -241,7 +241,7 @@ namespace Elastic.Routing
         /// </returns>
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            var _patternData = PatternData;
+            var _patternData = parsedPattern;
             FullPathSegment fullPathSegment = _patternData.FullPathSegment;
             Regex urlMatch = _patternData.UrlMatch;
 
@@ -357,18 +357,6 @@ namespace Elastic.Routing
 
             var pairs = queryString.Select(e => HttpUtility.UrlEncode(e.Key) + "=" + HttpUtility.UrlEncode(e.Value.ToString()));
             return string.Join("&", pairs);
-        }
-
-        private struct InnerData
-        {
-            public readonly Regex UrlMatch;
-            public readonly FullPathSegment FullPathSegment;
-
-            public InnerData(Regex urlMatch, FullPathSegment fullPathSegment)
-            {
-                UrlMatch = urlMatch;
-                FullPathSegment = fullPathSegment;
-            }
         }
     }
 }
