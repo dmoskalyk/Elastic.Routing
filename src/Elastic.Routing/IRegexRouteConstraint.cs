@@ -7,7 +7,7 @@ using System.Web.Routing;
 namespace Elastic.Routing
 {
     /// <summary>
-    /// An interface representing a route constraint which can also provide a regular expression pattern in addition to custom constrain logic.
+    /// An interface representing a route constraint which can also provide a regular expression pattern in addition to custom constraint logic.
     /// </summary>
     /// <seealso cref="IDynamicRegexRouteConstraint"/>
     public interface IRegexRouteConstraint : IRouteConstraint
