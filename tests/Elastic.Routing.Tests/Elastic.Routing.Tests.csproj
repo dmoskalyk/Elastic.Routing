@@ -59,7 +59,9 @@
     <Compile Include="PathParsingTests.cs" />
     <Compile Include="ElasticRouteTestBase.cs" />
     <Compile Include="RouteValuesMediatorTests.cs" />
+    <Compile Include="TestRegexConstraint.cs" />
     <Compile Include="UrlGenerationTests.cs" />
+    <Compile Include="RouteRegexConstraintMatchingTests.cs" />
     <Compile Include="UrlMatchingTests.cs" />
     <Compile Include="UtilsTests.cs" />
   </ItemGroup>
